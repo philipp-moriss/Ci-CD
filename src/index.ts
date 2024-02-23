@@ -9,7 +9,7 @@ const port = process.env.PORT ?? 10000;
 
 app.get("/", (req: Request, res: Response) => {
   const sumResult = sum(10, 10);
-  res.send(`Update info Here + ${sumResult}`);
+  res.send(`Hello this is updated branch + ${sumResult}`);
 });
 
 app.listen(port, () => {

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 29,
+            "activePatchIndex": 30,
             "patches": [
                 {
                     "date": 1708687429883,
@@ -124,6 +124,10 @@
                 {
                     "date": 1708693533278,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,61 +54,10 @@\n           context: .\n           push: true\n           tags: ${{ steps.meta.outputs.tags }}\n           labels: ${{ steps.meta.outputs.labels }}\n-name: Node.js With Docker\n-\n-on:\n-    push:\n-      branches:\n-        - \"docker\"\n-\n-env:\n-  REGISTRY: ghcr.io\n-  IMAGE_NAME: ${{ github.repository }}\n-\n-jobs:\n-  test:\n-      strategy:\n-        matrix:\n-          version: [14, 16, 18]\n-      runs-on: ubuntu-latest\n-      steps:\n-        - name: 'checkout'\n-          uses: actions/checkout@v4\n-        - name: Use Node.js\n-          uses: actions/setup-node@v3\n-          with:\n-            node-version: ${{ matrix.version }}\n-\n-        - name: Install dependencies\n-          run: npm install\n-        - name: Run Tests\n-          run: npm run test\n-  build-docker:\n-    runs-on: ubuntu-latest\n-    needs: [test]\n-    permissions:\n-      contents: read\n-      packages: write\n-\n-    steps:\n-      - name: Checkout repository\n-        uses: actions/checkout@v4\n-      - name: Log in to the Container registry\n-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n-        with:\n-          registry: ${{ env.REGISTRY }}\n-          username: ${{ github.actor }}\n-          password: ${{ secrets.TOKEN_GH }}\n-      - name: Extract metadata (tags, labels) for Docker\n-        id: meta\n-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7\n-        with:\n-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n-      - name: Build and push Docker image\n-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4\n-        with:\n-          context: .\n-          push: true\n-          tags: ${{ steps.meta.outputs.tags }}\n-          labels: ${{ steps.meta.outputs.labels }}\n+      - name: Deploy\n+        if: github.ref == 'refs/heads/docker'\n+        env:\n+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}\n+        run: |\n+          curl \"$deploy_url\"\n"
+                },
+                {
+                    "date": 1708693644385,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -37,20 +37,20 @@\n     steps:\n       - name: Checkout repository\n         uses: actions/checkout@v4\n       - name: Log in to the Container registry\n-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n+        uses: docker/login-action\n         with:\n           registry: ${{ env.REGISTRY }}\n           username: ${{ github.actor }}\n           password: ${{ secrets.TOKEN_GH }}\n       - name: Extract metadata (tags, labels) for Docker\n         id: meta\n-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7\n+        uses: docker/metadata-action\n         with:\n           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n       - name: Build and push Docker image\n-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4\n+        uses: docker/build-push-action\n         with:\n           context: .\n           push: true\n           tags: ${{ steps.meta.outputs.tags }}\n"
                 }
             ],
             "date": 1708687429883,

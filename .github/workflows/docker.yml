@@ -22,10 +22,18 @@ jobs:
         run: npm run build
   test:
       needs: [build]
+      strategy:
+        matrix:
+          version: [14, 16, 18]
       runs-on: ubuntu-latest
       steps:
         - name: 'checkout'
           uses: actions/checkout@v4
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.version }}
+
         - name: Install dependencies
           run: npm install
         - name: Run Tests

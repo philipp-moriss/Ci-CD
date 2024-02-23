@@ -5,21 +5,12 @@ on:
       branches:
         - "docker"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'checkout'
-        uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.x'
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
-      - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
+
+jobs:
   test:
       needs: [build]
       strategy:
@@ -38,3 +29,32 @@ jobs:
           run: npm install
         - name: Run Tests
           run: npm run test
+  build-docker:
+    needs: [build]
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN_GH }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

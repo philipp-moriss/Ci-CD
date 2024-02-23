@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 8,
+            "activePatchIndex": 21,
             "patches": [
                 {
                     "date": 1708687429883,
@@ -40,6 +40,58 @@
                 {
                     "date": 1708690815187,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,12 +21,20 @@\n       - name: Build\n         run: npm run build\n   test:\n       needs: [build]\n+      strategy:\n+        matrix:\n+          version: [14, 16, 18]\n       runs-on: ubuntu-latest\n       steps:\n         - name: 'checkout'\n           uses: actions/checkout@v4\n+        - name: Use Node.js\n+          uses: actions/setup-node@v3\n+          with:\n+            node-version: ${{ matrix.version }}\n+\n         - name: Install dependencies\n           run: npm install\n         - name: Run Tests\n           run: npm run test\n"
+                },
+                {
+                    "date": 1708691660475,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,22 +5,8 @@\n       branches:\n         - \"docker\"\n \n jobs:\n-  build:\n-    runs-on: ubuntu-latest\n-    steps:\n-      - name: 'checkout'\n-        uses: actions/checkout@v4\n-      - name: Use Node.js\n-        uses: actions/setup-node@v3\n-        with:\n-          node-version: '20.x'\n-\n-      - name: Install dependencies\n-        run: npm install\n-      - name: Build\n-        run: npm run build\n   test:\n       needs: [build]\n       strategy:\n         matrix:\n"
+                },
+                {
+                    "date": 1708691723560,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,8 +4,13 @@\n     push:\n       branches:\n         - \"docker\"\n \n+env:\n+  REGISTRY: ghcr.io\n+  IMAGE_NAME: ${{ github.repository }}\n+\n+\n jobs:\n   test:\n       needs: [build]\n       strategy:\n"
+                },
+                {
+                    "date": 1708691761248,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,4 +28,7 @@\n         - name: Install dependencies\n           run: npm install\n         - name: Run Tests\n           run: npm run test\n+  build-docker:\n+    needs: [build]\n+    runs-on: ubuntu-latest\n"
+                },
+                {
+                    "date": 1708691771702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,4 +31,7 @@\n           run: npm run test\n   build-docker:\n     needs: [build]\n     runs-on: ubuntu-latest\n+    permissions:\n+      contents: read\n+      packages: write\n"
+                },
+                {
+                    "date": 1708691799777,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,7 +31,10 @@\n           run: npm run test\n   build-docker:\n     needs: [build]\n     runs-on: ubuntu-latest\n+    \n     permissions:\n       contents: read\n       packages: write\n+\n+\n"
+                },
+                {
+                    "date": 1708691809049,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,5 +36,8 @@\n     permissions:\n       contents: read\n       packages: write\n \n+    steps:\n+      - name: Checkout repository\n+        uses: actions/checkout@v4\n \n"
+                },
+                {
+                    "date": 1708691830125,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -39,5 +39,7 @@\n \n     steps:\n       - name: Checkout repository\n         uses: actions/checkout@v4\n+     - name: Log in to the Container registry\n+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n \n"
+                },
+                {
+                    "date": 1708691839464,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -39,7 +39,7 @@\n \n     steps:\n       - name: Checkout repository\n         uses: actions/checkout@v4\n-     - name: Log in to the Container registry\n+      - name: Log in to the Container registry\n         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n \n"
+                },
+                {
+                    "date": 1708692025254,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,6 +40,7 @@\n     steps:\n       - name: Checkout repository\n         uses: actions/checkout@v4\n       - name: Log in to the Container registry\n-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n+        uses: docker/login-action\n+        \n \n"
+                },
+                {
+                    "date": 1708692046585,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,6 +41,9 @@\n       - name: Checkout repository\n         uses: actions/checkout@v4\n       - name: Log in to the Container registry\n         uses: docker/login-action\n-        \n+        with:\n+          registry: ${{ env.REGISTRY }}\n+          username: ${{ github.actor }}\n+          password: ${{ secrets.GITHUB_TOKEN }}\n \n"
+                },
+                {
+                    "date": 1708692263070,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,6 +44,6 @@\n         uses: docker/login-action\n         with:\n           registry: ${{ env.REGISTRY }}\n           username: ${{ github.actor }}\n-          password: ${{ secrets.GITHUB_TOKEN }}\n+          password: ${{ secrets.TOKEN_GH }}\n \n"
+                },
+                {
+                    "date": 1708692300791,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,5 +45,10 @@\n         with:\n           registry: ${{ env.REGISTRY }}\n           username: ${{ github.actor }}\n           password: ${{ secrets.TOKEN_GH }}\n+      - name: Extract metadata (tags, labels) for Docker\n+        id: meta\n+        uses: docker/metadata-action\n+        with:\n+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n \n"
+                },
+                {
+                    "date": 1708692319879,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,60 @@\n+name: Node.js With Docker\n+\n+on:\n+    push:\n+      branches:\n+        - \"docker\"\n+\n+env:\n+  REGISTRY: ghcr.io\n+  IMAGE_NAME: ${{ github.repository }}\n+\n+\n+jobs:\n+  test:\n+      needs: [build]\n+      strategy:\n+        matrix:\n+          version: [14, 16, 18]\n+      runs-on: ubuntu-latest\n+      steps:\n+        - name: 'checkout'\n+          uses: actions/checkout@v4\n+        - name: Use Node.js\n+          uses: actions/setup-node@v3\n+          with:\n+            node-version: ${{ matrix.version }}\n+\n+        - name: Install dependencies\n+          run: npm install\n+        - name: Run Tests\n+          run: npm run test\n+  build-docker:\n+    needs: [build]\n+    runs-on: ubuntu-latest\n+    \n+    permissions:\n+      contents: read\n+      packages: write\n+\n+    steps:\n+      - name: Checkout repository\n+        uses: actions/checkout@v4\n+      - name: Log in to the Container registry\n+        uses: docker/login-action\n+        with:\n+          registry: ${{ env.REGISTRY }}\n+          username: ${{ github.actor }}\n+          password: ${{ secrets.TOKEN_GH }}\n+      - name: Extract metadata (tags, labels) for Docker\n+        id: meta\n+        uses: docker/metadata-action\n+        with:\n+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n+      - name: Build and push Docker image\n+        uses: docker/build-push-action\n+        with:\n+          context: .\n+          push: true\n+          tags: ${{ steps.meta.outputs.tags }}\n+          labels: ${{ steps.meta.outputs.labels }}\n"
                 }
             ],
             "date": 1708687429883,

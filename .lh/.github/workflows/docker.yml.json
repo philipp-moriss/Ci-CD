@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1708687429883,
@@ -16,6 +16,14 @@
                 {
                     "date": 1708687541301,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,13 +6,12 @@\n         - \"docker\"\n \n jobs:\n   build:\n-\n     runs-on: ubuntu-latest\n-\n     steps:\n-      - uses: actions/checkout@v4\n+      - name: 'checkout'\n+        uses: actions/checkout@v4\n       - name: Use Node.js\n         uses: actions/setup-node@v3\n         with:\n           node-version: '20.x'\n"
+                },
+                {
+                    "date": 1708688119434,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,7 +17,7 @@\n           node-version: '20.x'\n \n       - name: Install dependencies\n         run: npm install\n-\n+  test:\n       - name: Run Tests\n\\ No newline at end of file\n-        run: npm run test\n+      run: npm run test\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1708688159393,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,6 +18,10 @@\n \n       - name: Install dependencies\n         run: npm install\n   test:\n-      - name: Run Tests\n-      run: npm run test\n\\ No newline at end of file\n+      runs-on: ubuntu-latest\n+      steps:\n+        - name: Install dependencies\n+          run: npm install\n+        - name: Run Tests\n+          run: npm run test\n"
                 }
             ],
             "date": 1708687429883,

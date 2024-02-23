@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 6,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1708687429883,
@@ -32,6 +32,10 @@
                 {
                     "date": 1708690620297,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,10 @@\n           node-version: '20.x'\n \n       - name: Install dependencies\n         run: npm install\n+      - name: Build\n+        run: npm run build\n   test:\n       runs-on: ubuntu-latest\n       steps:\n         - name: 'checkout'\n@@ -26,31 +28,4 @@\n         - name: Install dependencies\n           run: npm install\n         - name: Run Tests\n           run: npm run test\n-name: Node.js With Docker\n-\n-on:\n-    push:\n-      branches:\n-        - \"docker\"\n-\n-jobs:\n-  build:\n-    runs-on: ubuntu-latest\n-    steps:\n-      - name: 'checkout'\n-        uses: actions/checkout@v4\n-      - name: Use Node.js\n-        uses: actions/setup-node@v3\n-        with:\n-          node-version: '20.x'\n-\n-      - name: Install dependencies\n-        run: npm install\n-  test:\n-      runs-on: ubuntu-latest\n-      steps:\n-        - name: Install dependencies\n-          run: npm install\n-        - name: Run Tests\n-          run: npm run test\n"
+                },
+                {
+                    "date": 1708690670638,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,9 @@\n         run: npm install\n       - name: Build\n         run: npm run build\n   test:\n+      needs: [build]\n       runs-on: ubuntu-latest\n       steps:\n         - name: 'checkout'\n           uses: actions/checkout@v4\n"
                 }
             ],
             "date": 1708687429883,

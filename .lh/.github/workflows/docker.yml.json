@@ -1,0 +1,26 @@
+{
+    "sourceFile": ".github/workflows/docker.yml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1708687429883,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1708687505488,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,25 +20,5 @@\n       - name: Install dependencies\n         run: npm install\n \n       - name: Run Tests\n-        run: npm run test\n-  \n-  deploy:\n-    runs-on: ubuntu-latest\n-    needs: [build]\n-    steps:\n-      - uses: actions/checkout@v4\n-      - name: Use Node.js\n-        uses: actions/setup-node@v3\n-        with:\n-          node-version: '20.x'\n-\n-      - name: Install dependencies\n-        run: npm install\n-      - name: Deploy\n-        # Only run this step if the branch is main\n-        if: github.ref == 'refs/heads/main'\n-        env:\n-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}\n-        run: |\n-          curl \"$deploy_url\"\n\\ No newline at end of file\n+        run: npm run test\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1708687541301,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,13 +6,12 @@\n         - \"docker\"\n \n jobs:\n   build:\n-\n     runs-on: ubuntu-latest\n-\n     steps:\n-      - uses: actions/checkout@v4\n+      - name: 'checkout'\n+        uses: actions/checkout@v4\n       - name: Use Node.js\n         uses: actions/setup-node@v3\n         with:\n           node-version: '20.x'\n"
+                }
+            ],
+            "date": 1708687429883,
+            "name": "Commit-0",
+            "content": "name: Node.js With Docker\n\non:\n    push:\n      branches:\n        - \"docker\"\n\njobs:\n  build:\n\n    runs-on: ubuntu-latest\n\n    steps:\n      - uses: actions/checkout@v4\n      - name: Use Node.js\n        uses: actions/setup-node@v3\n        with:\n          node-version: '20.x'\n\n      - name: Install dependencies\n        run: npm install\n\n      - name: Run Tests\n        run: npm run test\n  \n  deploy:\n    runs-on: ubuntu-latest\n    needs: [build]\n    steps:\n      - uses: actions/checkout@v4\n      - name: Use Node.js\n        uses: actions/setup-node@v3\n        with:\n          node-version: '20.x'\n\n      - name: Install dependencies\n        run: npm install\n      - name: Deploy\n        # Only run this step if the branch is main\n        if: github.ref == 'refs/heads/main'\n        env:\n          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}\n        run: |\n          curl \"$deploy_url\""
+        }
+    ]
+}

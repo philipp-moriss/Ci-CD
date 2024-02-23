@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 30,
+            "activePatchIndex": 31,
             "patches": [
                 {
                     "date": 1708687429883,
@@ -128,6 +128,10 @@
                 {
                     "date": 1708693644385,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -37,20 +37,20 @@\n     steps:\n       - name: Checkout repository\n         uses: actions/checkout@v4\n       - name: Log in to the Container registry\n-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n+        uses: docker/login-action\n         with:\n           registry: ${{ env.REGISTRY }}\n           username: ${{ github.actor }}\n           password: ${{ secrets.TOKEN_GH }}\n       - name: Extract metadata (tags, labels) for Docker\n         id: meta\n-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7\n+        uses: docker/metadata-action\n         with:\n           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n       - name: Build and push Docker image\n-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4\n+        uses: docker/build-push-action\n         with:\n           context: .\n           push: true\n           tags: ${{ steps.meta.outputs.tags }}\n"
+                },
+                {
+                    "date": 1708693705679,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -37,20 +37,20 @@\n     steps:\n       - name: Checkout repository\n         uses: actions/checkout@v4\n       - name: Log in to the Container registry\n-        uses: docker/login-action\n+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1\n         with:\n           registry: ${{ env.REGISTRY }}\n           username: ${{ github.actor }}\n           password: ${{ secrets.TOKEN_GH }}\n       - name: Extract metadata (tags, labels) for Docker\n         id: meta\n-        uses: docker/metadata-action\n+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7\n         with:\n           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n       - name: Build and push Docker image\n-        uses: docker/build-push-action\n+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4\n         with:\n           context: .\n           push: true\n           tags: ${{ steps.meta.outputs.tags }}\n"
                 }
             ],
             "date": 1708687429883,

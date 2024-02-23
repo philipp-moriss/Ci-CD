@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 25,
+            "activePatchIndex": 27,
             "patches": [
                 {
                     "date": 1708687429883,
@@ -108,6 +108,14 @@
                 {
                     "date": 1708692558389,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -50,9 +50,9 @@\n         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7\n         with:\n           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\n       - name: Build and push Docker image\n-        uses: docker/build-push-action\n+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4\n         with:\n           context: .\n           push: true\n           tags: ${{ steps.meta.outputs.tags }}\n"
+                },
+                {
+                    "date": 1708692616939,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,8 @@\n           run: npm install\n         - name: Run Tests\n           run: npm run test\n   build-docker:\n-    needs: [build]\n     runs-on: ubuntu-latest\n     \n     permissions:\n       contents: read\n"
+                },
+                {
+                    "date": 1708692632552,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,8 @@\n   IMAGE_NAME: ${{ github.repository }}\n \n jobs:\n   test:\n-      needs: [build]\n       strategy:\n         matrix:\n           version: [14, 16, 18]\n       runs-on: ubuntu-latest\n@@ -29,9 +28,9 @@\n         - name: Run Tests\n           run: npm run test\n   build-docker:\n     runs-on: ubuntu-latest\n-    \n+    needs: [test]\n     permissions:\n       contents: read\n       packages: write\n \n"
                 }
             ],
             "date": 1708687429883,
